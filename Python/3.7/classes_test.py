@@ -1,39 +1,56 @@
 from tkinter import *
 import random
 
-root = Tk()
-root.title("Maths Quiz")
-root.geometry("800x600")
-
-
 # Classes
-class Page():
-    def __init__(self, master):
-        self.mainFrame = Frame(master)
-        self.mainFrame.place(relx=0, rely=0, relheight=1, relwidth=1)
-
-
-class StartMenu(Page):
-    def __init__(self, master):
-        super().__init__(master)
+class App(Tk):
+    def __init__(self, *args, **kwargs):
+        Tk.__init__(self, *args, **kwargs)
         
-        self.title = Label(self.mainFrame, text="Maths Quiz!", font=("Arial", 50, "bold"))
+        mainFrame = Frame(self)
+
+        mainFrame.place(relx=0, rely=0, relheight=1, relwidth=1)
+
+        self.pageList = {}
+
+        for page in (StartMenu, EasyQuiz):
+
+            frame = page(mainFrame, self)
+
+            self.pageList[page] = frame
+
+            frame.place(relx=0, rely=0, relheight=1, relwidth=1)
+
+        self.show_page(StartMenu)
+
+    def show_page(self, cont):
+
+        page = self.pageList[cont]
+        page.tkraise()
+
+
+class StartMenu(Frame):
+    def __init__(self, master, mainFrame):
+        Frame.__init__(self, master)
+        
+        self.title = Label(self, text="Maths Quiz!", font=("Arial", 50, "bold"))
         self.title.place(relx=0.005, rely=0.005, relheight=0.24375, relwidth=0.99)
 
-        self.easyButton = Button(self.mainFrame, text="Easy", font=("Arial", 50, "bold"), bg="#1ade5e", activebackground="#10d16a")
+        self.easyButton = Button(self, text="Easy", font=("Arial", 50, "bold"), bg="#1ade5e", activebackground="#10d16a", command=lambda: mainFrame.show_page(EasyQuiz))
         self.easyButton.place(relx=0.255, rely=0.25375, relheight=0.14375, relwidth=0.49)
 
-        self.mediumButton = Button(self.mainFrame, text="Medium", font=("Arial", 50, "bold"), bg="#dfa71b", activebackground="#d58312")
+        self.mediumButton = Button(self, text="Medium", font=("Arial", 50, "bold"), bg="#dfa71b", activebackground="#d58312")
         self.mediumButton.place(relx=0.255, rely=0.5025, relheight=0.14375, relwidth=0.49)
 
-        self.hardButton = Button(self.mainFrame, text="Hard", font=("Arial", 50, "bold"), bg="#de1c27", activebackground="#d51443")
+        self.hardButton = Button(self, text="Hard", font=("Arial", 50, "bold"), bg="#de1c27", activebackground="#d51443")
         self.hardButton.place(relx=0.255, rely=0.75125, relheight=0.14375, relwidth=0.49)
 
+        
 
 
-class EasyQuiz(Page):
-    def __init__(self, master):
-        super().__init__(master)
+
+class EasyQuiz(Frame):
+    def __init__(self, master, mainFrame):
+        Frame.__init__(self, master)
 
         global questionVar
         global answerVar
@@ -46,11 +63,8 @@ class EasyQuiz(Page):
         self.maxQuestions = 10
         self.currentQuestion = 0
 
-        self.mainFrame = Frame(master)
-        self.mainFrame.place(relx=0, rely=0, relheight=1, relwidth=1)
-
         # Quiz
-        self.quizFrame = Frame(self.mainFrame)
+        self.quizFrame = Frame(self)
         self.quizFrame.place(relx=0, rely=0, relheight=1, relwidth=0.5)
 
         self.questionVar = StringVar(self.quizFrame, self.GetQuestion())
@@ -61,12 +75,12 @@ class EasyQuiz(Page):
         self.answerLabel = Label(self.quizFrame, textvariable=self.answerVar, font=("Arial", 50, "bold"))
         self.answerLabel.place(relx=0.005, rely=0.3366, relheight=0.3266, relwidth=0.99) 
 
-        self.scoreVar = StringVar(self.quizFrame, "{}/{}".format(self.score, self.maxQuestions))
+        self.scoreVar = StringVar(self.quizFrame, "Score: {}/{}".format(self.score, self.maxQuestions))
         self.scoreLabel = Label(self.quizFrame, textvariable=self.scoreVar, font=("Arial", 50, "bold"))
         self.scoreLabel.place(relx=0.005, rely=0.6683, relheight=0.3266, relwidth=0.99)
 
         # Keypad
-        self.keypadFrame = Frame(self.mainFrame, bg="#cccccc", borderwidth=5, relief="ridge")
+        self.keypadFrame = Frame(self, bg="#cccccc", borderwidth=5, relief="ridge")
         self.keypadFrame.place(relx=0.5, rely=0, relwidth=0.5, relheight=1)
 
         self.button1 = Button(self.keypadFrame, text="1", font=("Arial", 40, "bold"), bg="#1bcae0", activebackground="#14a6d7", command=lambda: self.SetAnswer(1))
@@ -123,7 +137,7 @@ class EasyQuiz(Page):
         global score
         if int(self.answerVar.get()) == self.added:
             self.score += 1
-            self.scoreVar.set("{}/{}".format(self.score, self.maxQuestions))
+            self.scoreVar.set("Score: {}/{}".format(self.score, self.maxQuestions))
             self.newQuestion = self.GetQuestion()
             self.questionVar.set(self.newQuestion)
         else:
@@ -131,10 +145,12 @@ class EasyQuiz(Page):
             self.questionVar.set(self.newQuestion)
 
     def NextScreen(self):
-        self.mainFrame.destroy()
+        self.destroy()
             
 
             
-app = StartMenu(root)
+app = App()
+app.title("Maths Quiz!")
+app.geometry("1000x600")
 # Mainloop
-root.mainloop()
+app.mainloop()
