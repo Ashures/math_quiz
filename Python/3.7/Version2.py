@@ -164,12 +164,26 @@ class EasyQuiz(Frame):
         self.finishFrame = Frame(self)
         self.finishFrame.place(relx=0, rely=0, relheight=0.6666, relwidth=0.5)
         
-        self.quizFinsihLabel = Label(self.finishFrame, text="Game Over!", font=("Arial", 50, "italic"))
-        self.quizFinsihLabel.place(relx=0.005, rely=0.005, relheight=0.495, relwidth=0.99)
+        self.quizFinsihLabel = Label(self.finishFrame, text="Game Over!", font=("Arial", 50, "italic bold"))
+        self.quizFinsihLabel.place(relx=0.005, rely=0.005, relheight=0.3283, relwidth=0.99)
 
         self.scoreVar = StringVar(self.finishFrame, "Final Score: {}/{}".format(self.score, self.maxQuestions))
         self.scoreLabel = Label(self.finishFrame, textvariable=self.scoreVar, font=("Arial", 40, "bold"))
-        self.scoreLabel.place(relx=0.005, rely=0.505, relheight=0.495, relwidth=0.99)
+        self.scoreLabel.place(relx=0.005, rely=0.3333, relheight=0.3283, relwidth=0.99)
+
+        self.messageVar = StringVar(self.finishFrame, "")
+        if self.score < 3:
+            self.messageVar.set("Pathetic..")
+        elif self.score >= 3 and self.score < 6:
+            self.messageVar.set("Okay.. I guess..")
+        elif self.score >= 6 and self.score < 10:
+            self.messageVar.set("Barely competent.")
+        elif self.score == 10:
+            self.messageVar.set("Good enough.")
+        else:
+            self.messageVar.set("Try again.")
+        self.messageLabel = Label(self.finishFrame, textvariable=self.messageVar, font=("Arial", 35, "italic"))
+        self.messageLabel.place(relx=0.005, rely=0.6666, relheight=0.3283, relwidth=0.99)
 
     def Reset(self):
         self.RunQuiz()
