@@ -20,11 +20,12 @@ class App(Tk):
 
             frame.place(relx=0, rely=0, relheight=1, relwidth=1)
 
-        self.show_page(StartMenu)
+        self.ShowPage(StartMenu)
 
-    def show_page(self, cont):
+    def ShowPage(self, cont):
 
         page = self.pageList[cont]
+        page.Reset()
         page.tkraise()
 
 
@@ -35,7 +36,7 @@ class StartMenu(Frame):
         self.title = Label(self, text="Maths Quiz!", font=("Arial", 50, "bold"))
         self.title.place(relx=0.005, rely=0.005, relheight=0.24375, relwidth=0.99)
 
-        self.easyButton = Button(self, text="Easy", font=("Arial", 50, "bold"), bg="#1ade5e", activebackground="#10d16a", command=lambda: mainFrame.show_page(EasyQuiz))
+        self.easyButton = Button(self, text="Easy", font=("Arial", 50, "bold"), bg="#1ade5e", activebackground="#10d16a", command=lambda: mainFrame.ShowPage(EasyQuiz))
         self.easyButton.place(relx=0.255, rely=0.25375, relheight=0.14375, relwidth=0.49)
 
         self.mediumButton = Button(self, text="Medium", font=("Arial", 50, "bold"), bg="#dfa71b", activebackground="#d58312")
@@ -43,6 +44,9 @@ class StartMenu(Frame):
 
         self.hardButton = Button(self, text="Hard", font=("Arial", 50, "bold"), bg="#de1c27", activebackground="#d51443")
         self.hardButton.place(relx=0.255, rely=0.75125, relheight=0.14375, relwidth=0.49)
+
+    def Reset(self):
+        pass
 
         
 
@@ -52,6 +56,17 @@ class EasyQuiz(Frame):
     def __init__(self, master, mainFrame):
         Frame.__init__(self, master)
 
+        # Menu
+        self.menuFrame = Frame(self)
+        self.menuFrame.place(relx=0, rely=0.6666, relheight=0.3334, relwidth=0.5)
+
+        self.menuButton = Button(self.menuFrame, text="Main Menu", font=("Arial", 50, "bold"), bg="#1bcae0", activebackground="#14a6d7", command=lambda: mainFrame.ShowPage(StartMenu))
+        self.menuButton.place(relx=0.055, rely=0.1, relheight=0.5, relwidth=0.89) 
+
+        # Setup 
+        self.RunQuiz()
+
+    def RunQuiz(self):
         global questionVar
         global answerVar
         global score
@@ -65,19 +80,17 @@ class EasyQuiz(Frame):
 
         # Quiz
         self.quizFrame = Frame(self)
-        self.quizFrame.place(relx=0, rely=0, relheight=1, relwidth=0.5)
+        self.quizFrame.place(relx=0, rely=0, relheight=0.6666, relwidth=0.5)
 
         self.questionVar = StringVar(self.quizFrame, self.GetQuestion())
         self.questionLabel = Label(self.quizFrame, textvariable=self.questionVar, font=("Arial", 50, "italic"))
-        self.questionLabel.place(relx=0.005, rely=0.005, relheight=0.3266, relwidth=0.99)
+        self.questionLabel.place(relx=0.005, rely=0.005, relheight=0.445, relwidth=0.99)
 
         self.answerVar = StringVar(self.quizFrame, "0")
         self.answerLabel = Label(self.quizFrame, textvariable=self.answerVar, font=("Arial", 50, "bold"))
-        self.answerLabel.place(relx=0.005, rely=0.3366, relheight=0.3266, relwidth=0.99) 
+        self.answerLabel.place(relx=0.005, rely=0.455, relheight=0.445, relwidth=0.99) 
 
         self.scoreVar = StringVar(self.quizFrame, "Score: {}/{}".format(self.score, self.maxQuestions))
-        self.scoreLabel = Label(self.quizFrame, textvariable=self.scoreVar, font=("Arial", 50, "bold"))
-        self.scoreLabel.place(relx=0.005, rely=0.6683, relheight=0.3266, relwidth=0.99)
 
         # Keypad
         self.keypadFrame = Frame(self, bg="#cccccc", borderwidth=5, relief="ridge")
@@ -130,23 +143,37 @@ class EasyQuiz(Frame):
             self.nextQuestion = "{}. {} + {} = ?".format(self.currentQuestion, self.number1, self.number2)
             return self.nextQuestion
         else: 
-
-            self.NextScreen()
+            self.quizFrame.destroy()
+            self.LoadFinish()
+            
 
     def CheckAnswer(self):
         global score
         if int(self.answerVar.get()) == self.added:
+            self.answerVar.set("0")
             self.score += 1
             self.scoreVar.set("Score: {}/{}".format(self.score, self.maxQuestions))
             self.newQuestion = self.GetQuestion()
             self.questionVar.set(self.newQuestion)
         else:
+            self.answerVar.set("0")
             self.newQuestion = self.GetQuestion()
             self.questionVar.set(self.newQuestion)
 
-    def NextScreen(self):
-        self.destroy()
-            
+    def LoadFinish(self):
+        self.finishFrame = Frame(self)
+        self.finishFrame.place(relx=0, rely=0, relheight=0.6666, relwidth=0.5)
+        
+        self.quizFinsihLabel = Label(self.finishFrame, text="Game Over!", font=("Arial", 50, "italic"))
+        self.quizFinsihLabel.place(relx=0.005, rely=0.005, relheight=0.495, relwidth=0.99)
+
+        self.scoreVar = StringVar(self.finishFrame, "Final Score: {}/{}".format(self.score, self.maxQuestions))
+        self.scoreLabel = Label(self.finishFrame, textvariable=self.scoreVar, font=("Arial", 40, "bold"))
+        self.scoreLabel.place(relx=0.005, rely=0.505, relheight=0.495, relwidth=0.99)
+
+    def Reset(self):
+        self.RunQuiz()
+        app.update()
 
             
 app = App()
