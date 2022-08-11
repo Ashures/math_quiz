@@ -49,9 +49,6 @@ class StartMenu(Frame):
         pass
 
         
-
-
-
 class EasyQuiz(Frame):
     def __init__(self, master, mainFrame):
         Frame.__init__(self, master)
