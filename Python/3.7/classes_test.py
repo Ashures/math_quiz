@@ -21,13 +21,13 @@ class StartMenu(Page):
         self.title.place(relx=0.005, rely=0.005, relheight=0.24375, relwidth=0.99)
 
         self.easyButton = Button(self.mainFrame, text="Easy", font=("Arial", 50, "bold"), bg="#1ade5e", activebackground="#10d16a")
-        self.easyButton.place(relx=0.255, rely=0.25375, relheight=24375, relwidth=0.49)
+        self.easyButton.place(relx=0.255, rely=0.25375, relheight=0.14375, relwidth=0.49)
 
         self.mediumButton = Button(self.mainFrame, text="Medium", font=("Arial", 50, "bold"), bg="#dfa71b", activebackground="#d58312")
-        self.mediumButton.place(relx=0.255, rely=0.5025, relheight=24375, relwidth=0.49)
+        self.mediumButton.place(relx=0.255, rely=0.5025, relheight=0.14375, relwidth=0.49)
 
         self.hardButton = Button(self.mainFrame, text="Hard", font=("Arial", 50, "bold"), bg="#de1c27", activebackground="#d51443")
-        self.hardButton.place(relx=0.255, rely=0.75125, relheight=24375, relwidth=0.49)
+        self.hardButton.place(relx=0.255, rely=0.75125, relheight=0.14375, relwidth=0.49)
 
 
 
